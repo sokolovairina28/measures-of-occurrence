@@ -17,3 +17,38 @@ B. Incidence
 Популяция: взрослые люди с инфекцией Helicobacter pylori, у которых на момент исследования нет рака желудка
 Вмешательство: отсутствует (так как исследование наблюдательное)
 Исход: впервые диагностированный рак желудка
+
+№2
+```{r}
+library(tidyverse)
+df_cancer <- read_csv2("Ирина Соколова - df_cancer.csv", locale = locale(decimal_mark = "."))
+df_cancer <- df_cancer %>%
+    mutate(Start_month = as.numeric(Start_month))
+```
+
+Оценка incidence общего количества онкологии
+```{r}
+df_cancer <- df_cancer %>%
+    mutate(cancer = DS != "Health")
+
+df_cancer %>%
+    summarise(
+        cases = sum(cancer),
+        total = n(),
+        incidence = cases/total
+    )
+```
+
+Оценка incidence rate общего количества онкологии
+```{r}
+df_cancer <- df_cancer %>%
+    mutate(follow_up = End_month - Start_month)
+
+df_cancer %>%
+    summarise(
+        cases = sum(cancer),
+        person_time = sum(follow_up),
+        incidence_rate = cases/person_time
+    )
+
+```
