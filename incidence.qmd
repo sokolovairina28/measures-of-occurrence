@@ -60,7 +60,8 @@ df_cancer |>
     group_by(DS) |>
     summarise(
         cases = n(),
-        Incidence = cases/200
+        total = nrow(df_cancer),
+        Incidence = cases/total
     )
 ```
 
