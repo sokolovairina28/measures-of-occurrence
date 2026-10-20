@@ -3,7 +3,7 @@ title: "incidence"
 format: html
 ---
 
-№1
+# 1
 А. Prevalence
 Исследование распространенности инфекции Helicobacter pylori среди взрослого населения
 Дизайн: поперечное исследование
@@ -18,20 +18,20 @@ B. Incidence
 Вмешательство: отсутствует (так как исследование наблюдательное)
 Исход: впервые диагностированный рак желудка
 
-№2
+# 2
 ```{r}
 library(tidyverse)
 df_cancer <- read_csv2("Ирина Соколова - df_cancer.csv", locale = locale(decimal_mark = "."))
-df_cancer <- df_cancer %>%
+df_cancer <- df_cancer |>
     mutate(Start_month = as.numeric(Start_month))
 ```
 
 Оценка incidence общего количества онкологии
 ```{r}
-df_cancer <- df_cancer %>%
+df_cancer <- df_cancer |>
     mutate(cancer = DS != "Health")
 
-df_cancer %>%
+df_cancer |>
     summarise(
         cases = sum(cancer),
         total = n(),
@@ -41,14 +41,45 @@ df_cancer %>%
 
 Оценка incidence rate общего количества онкологии
 ```{r}
-df_cancer <- df_cancer %>%
+df_cancer <- df_cancer |>
     mutate(follow_up = End_month - Start_month)
 
-df_cancer %>%
+df_cancer |>
     summarise(
         cases = sum(cancer),
         person_time = sum(follow_up),
         incidence_rate = cases/person_time
     )
+```
+
+Оценка incidence по видам рака
+```{r}
+df_cancer |>
+    filter(DS != "Health") |>
+    group_by(DS) |>
+    summarise(
+        cases = n(),
+        Incidence = cases/200
+    )
+```
+
+Оценка incidence rate по видам рака
+```{r}
+df_cancer <- df_cancer |>
+    mutate(follow_up = End_month - Start_month)
+
+df_cancer |>
+     filter(DS != "Health") |>
+    group_by(DS) |>
+    summarise(
+        cases = n(),
+        person_time = sum(follow_up),
+        incidence_rate = cases/person_time
+    )
+```
+
+# 3
+
+```{r}
 
 ```
