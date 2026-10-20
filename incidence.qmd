@@ -81,5 +81,16 @@ df_cancer |>
 # 3
 
 ```{r}
+df_death <- read_csv2("Ирина Соколова - df_death.csv")
+
+df_death |>
+    mutate(
+        mortality_rate = Deaths / Population,
+        weights = Reference / sum(Reference),
+        weighted_rate = mortality_rate * weights
+    ) |>
+        summarise(
+            sex_adjusted_mortality_rate = sum(weighted_rate)
+        )
 
 ```
